@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+  background-color: #020617;
+  color: #f8fafc;
+  min-height: 100vh;
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-slate-900/60 backdrop-blur-md border border-slate-700/50 shadow-xl;
+  }
+  .neon-text {
+    @apply text-stark-neon drop-shadow-[0_0_8px_rgba(6,182,212,0.8)];
+  }
+  .stark-button {
+    @apply bg-ironman-red hover:bg-red-700 text-white font-bold tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(185,28,28,0.4)] hover:shadow-[0_0_25px_rgba(185,28,28,0.7)];
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); height: min-content; }
+  to { opacity: 1; transform: translateY(0); height: min-content; }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}

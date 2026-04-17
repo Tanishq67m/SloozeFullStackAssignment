@@ -1,0 +1,131 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthResponse {
+  accessToken: String!
+  user: UserPayload!
+}
+
+type MenuItemType {
+  category: String!
+  description: String!
+  id: String!
+  imageUrl: String
+  isAvailable: Boolean!
+  name: String!
+  price: Float!
+  restaurantId: String!
+}
+
+type Mutation {
+  addPaymentMethod(isDefault: Boolean! = false, last4: String!, provider: String!, type: String!): PaymentMethodOut!
+  cancelOrder(orderId: String!): OrderType!
+  createOrder(items: [OrderItemInput!]!, notes: String, restaurantId: String!): OrderType!
+  login(email: String!, password: String!): AuthResponse!
+  placeOrder(orderId: String!, paymentMethodId: String!): OrderType!
+  removePaymentMethod(id: String!): PaymentMethodOut!
+  setDefaultPaymentMethod(id: String!): PaymentMethodOut!
+}
+
+input OrderItemInput {
+  menuItemId: String!
+  quantity: Int!
+}
+
+type OrderItemType {
+  id: String!
+  menuItem: MenuItemType!
+  quantity: Int!
+  totalPrice: Float!
+  unitPrice: Float!
+}
+
+type OrderType {
+  country: String!
+  createdAt: String!
+  id: String!
+  notes: String
+  orderItems: [OrderItemType!]!
+  payment: PaymentType
+  restaurant: RestaurantType!
+  status: String!
+  totalAmount: Float!
+  user: UserInOrder!
+}
+
+type PaymentMethodOut {
+  id: String!
+  isDefault: Boolean!
+  last4: String!
+  provider: String!
+  type: String!
+  userId: String!
+}
+
+type PaymentMethodType {
+  id: String!
+  isDefault: Boolean!
+  last4: String!
+  provider: String!
+  type: String!
+}
+
+type PaymentType {
+  amount: Float!
+  id: String!
+  paymentMethod: PaymentMethodType
+  status: String!
+  transactionRef: String!
+}
+
+type Query {
+  me: UserType!
+  myPaymentMethods: [PaymentMethodOut!]!
+  order(id: String!): OrderType
+  orders: [OrderType!]!
+  restaurant(id: String!): RestaurantType
+  restaurants: [RestaurantType!]!
+  teamMembers: [UserType!]!
+}
+
+type RestaurantType {
+  address: String!
+  country: String!
+  cuisine: String!
+  description: String!
+  id: String!
+  imageUrl: String
+  isActive: Boolean!
+  menuItems: [MenuItemType!]!
+  name: String!
+  rating: Float!
+}
+
+type Subscription {
+  orderPlaced: OrderType!
+}
+
+type UserInOrder {
+  country: String
+  email: String!
+  id: String!
+  name: String!
+  role: String!
+}
+
+type UserPayload {
+  country: String
+  email: String!
+  id: String!
+  name: String!
+  role: String!
+}
+
+type UserType {
+  country: String
+  email: String!
+  id: String!
+  name: String!
+  role: String!
+}
