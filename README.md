@@ -1,212 +1,99 @@
-# Slooze Food Ordering App
+# S.H.I.E.L.D Food Command Center 🛡️
 
-A full-stack food ordering application with Role-Based Access Control (RBAC) and Relational Access Control (ReBAC) built for the Slooze take-home assignment.
+![Live Demo](https://img.shields.io/badge/Live_Project-Vercel-black?style=for-the-badge&logo=vercel)
 
-## Stack
+A beautifully themed, superhero-driven full-stack web application built for the Slooze assignment. Step into a classified command center and execute intelligence-based supply requests (food orders) while testing advanced role-based access controllers.
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Next.js 14 (App Router), Tailwind CSS, Apollo Client |
-| Backend | NestJS, GraphQL (Apollo Server), Prisma ORM |
-| Database | PostgreSQL |
-| Auth | JWT (role + country embedded in token) |
-| Real-time | GraphQL Subscriptions over WebSocket |
-| DevOps | Docker Compose (one-command setup) |
+🚀 **Live Project URL:** [https://slooze-full-stack-assignment.vercel.app/](https://slooze-full-stack-assignment.vercel.app/)
 
 ---
 
-## Quickstart (Docker — recommended)
+## 🛠 Tech Stack
 
-### Prerequisites
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
+- **Frontend:** Next.js (React), Tailwind CSS, Apollo Client (GraphQL), Glassmorphism UI
+- **Backend:** NestJS, GraphQL (Code-First), Apollo Server
+- **Database Architecture:** PostgreSQL (managed by Prisma ORM)
+- **Deployment:** Vercel (Frontend), Render (Backend), Neon (Database)
 
-### Run the whole stack in one command
+## 🌟 Core Features
 
-```bash
-git clone <your-repo-url>
-cd slooze-challenge
-docker compose up --build
-```
-
-That's it. Docker will:
-1. Start PostgreSQL
-2. Run Prisma migrations
-3. Seed the database with all 6 Marvel characters, restaurants, menus, and sample orders
-4. Start the NestJS backend on **http://localhost:3001**
-5. Start the Next.js frontend on **http://localhost:3000**
-
-Open **http://localhost:3000** and log in.
+- **Marvel Avengers Aesthetic:** Built from scratch with a custom dark-mode tailwind configuration (`#020617` obsidian base) featuring smooth keyframe animations, glowing elements, and `stark-neon` accents.
+- **RBAC (Role-Based Access Control):** Custom `@Roles()` decorators ensure that `MEMBERS` cannot check out or modify payment clearances, isolating actions securely.
+- **ReBAC (Relationship/Country-Based Access Control):** Employs strict global scoping via `CountryGuard`. Operatives logged into specific regions (e.g., India) are completely locked out from fetching, searching, or seeing data in unrelated branches (e.g., America).
 
 ---
 
-## Local Development (without Docker)
+## 💻 Running the Project Locally
+
+If you fork or download this repository, follow these steps to spin up the local development environment seamlessly.
 
 ### Prerequisites
-- Node.js 20+
-- PostgreSQL running locally (or use Docker just for the DB)
+- Node.js (v18 or v20+)
+- A local or cloud PostgreSQL database (you can easily grab a free one from [Neon.tech](https://neon.tech))
 
-### 1. Start the database only
-
-```bash
-docker compose up postgres -d
-```
-
-### 2. Backend setup
-
+### 1. Backend Setup (NestJS)
+Navigate to the `backend` directory:
 ```bash
 cd backend
+```
+Install all necessary packages:
+```bash
 npm install
+```
+Configure your environment variables by creating a `.env` file:
+```bash
+touch .env
+```
+Inside the `.env`, provide your PostgreSQL connection string and secure a JWT secret:
+```env
+# .env
+DATABASE_URL="postgresql://user:password@localhost/slooze_db?schema=public"
+JWT_SECRET="super_secret_shield_code"
+PORT=4000
+```
+Generate the Prisma Client, run migrations, and automatically seed database with Operatives and Menus:
+```bash
+npx prisma generate
 npx prisma migrate dev --name init
 npx prisma db seed
+```
+Start the backend development server:
+```bash
 npm run start:dev
 ```
+*(The backend should now securely run and listen globally on `http://localhost:4000/graphql`)*
 
-Backend runs at **http://localhost:3001/graphql**
-
-### 3. Frontend setup
-
+### 2. Frontend Setup (Next.js)
+Open a new terminal tab and navigate to the `frontend` directory:
 ```bash
 cd frontend
+```
+Install all UI and client dependencies:
+```bash
 npm install
+```
+Start the frontend development server:
+```bash
 npm run dev
 ```
 
-Frontend runs at **http://localhost:3000**
+Visit [`http://localhost:3000`](http://localhost:3000) to view the application!
 
 ---
 
-## Login Credentials
+## 🕵️‍♂️ S.H.I.E.L.D Operatives (Test Logins)
 
-All users share the password: **`password123`**
+The database seed will generate these exact operatives. Use them to test the RBAC/ReBAC permission limits! 
+> **Universal Password:** `password123`
 
-| Name | Email | Role | Country |
-|------|-------|------|---------|
-| Nick Fury | nick.fury@shield.com | ADMIN | Global (no restriction) |
-| Captain Marvel | captain.marvel@shield.com | MANAGER | India |
-| Captain America | captain.america@shield.com | MANAGER | America |
-| Thanos | thanos@shield.com | MEMBER | India |
-| Thor | thor@shield.com | MEMBER | India |
-| Travis | travis@shield.com | MEMBER | America |
-
-> **Tip:** Use the **"Switch User"** dropdown in the navbar to instantly switch between characters without logging out.
-
----
-
-## Access Control Matrix
-
-| Feature | Admin | Manager | Member |
-|---------|-------|---------|--------|
-| View restaurants & menus | ✅ All countries | ✅ Own country only | ✅ Own country only |
-| Create order | ✅ | ✅ | ✅ |
-| Place order (checkout & pay) | ✅ | ✅ Own country only | ❌ |
-| Cancel order | ✅ | ✅ Own country only | ❌ |
-| Manage payment methods | ✅ | ❌ | ❌ |
-| Real-time order notifications | ✅ All | ✅ Own country | ❌ |
+| Name | Clearances (Role) | Assigned Region | Email Login |
+| :--- | :--- | :--- | :--- |
+| **Nick Fury** | `ADMIN` | Global (All Regions) | `nick.fury@shield.com` |
+| **Captain Marvel** | `MANAGER` | India | `captain.marvel@shield.com` |
+| **Captain America** | `MANAGER` | America | `captain.america@shield.com` |
+| **Thanos** | `MEMBER` | India | `thanos@shield.com` |
+| **Thor** | `MEMBER` | India | `thor@shield.com` |
+| **Travis** | `MEMBER` | America | `travis@shield.com` |
 
 ---
-
-## Architecture
-
-### RBAC (Role-Based Access Control)
-Implemented via `RolesGuard` in NestJS. Every GraphQL resolver is decorated with `@Roles(Role.ADMIN, Role.MANAGER)` etc. The guard reads the JWT token, extracts the role, and compares it against the required roles. If the role doesn't match, a `403 ForbiddenException` is thrown.
-
-### ReBAC (Relational/Relationship-Based Access Control) — Bonus
-Implemented via `CountryGuard.assertCountryAccess()`. This is called inside resolvers *after* the resource is fetched. It compares `user.country` (from JWT) against the resource's `country` field. Admin always bypasses this check.
-
-**Example flow:**
-1. Thanos (Member · India) tries to fetch an American restaurant via `/restaurant?id=...`
-2. `RolesGuard` passes — MEMBER can view restaurants
-3. Restaurant is fetched from DB
-4. `CountryGuard.assertCountryAccess(user, restaurant.country)` throws 403 because `INDIA !== AMERICA`
-
-### Real-time Subscriptions
-When a Manager places an order, the backend publishes an `ORDER_PLACED` event via `graphql-subscriptions` PubSub. The subscription filter function checks the event's `country` against the subscriber's `country` (from JWT in WebSocket `connectionParams`), so only the correct country's managers receive the toast notification.
-
-### JWT Payload
-```json
-{
-  "sub": "user-id",
-  "email": "captain.marvel@shield.com",
-  "name": "Captain Marvel",
-  "role": "MANAGER",
-  "country": "INDIA"
-}
-```
-Both `role` and `country` are embedded so guards work without extra DB calls.
-
----
-
-## Project Structure
-
-```
-slooze-challenge/
-├── docker-compose.yml          # One-command startup
-├── backend/
-│   ├── prisma/
-│   │   ├── schema.prisma       # Full data model
-│   │   └── seed.ts             # Marvel characters + sample data
-│   └── src/
-│       ├── auth/               # Login mutation, JWT signing
-│       ├── common/             # RolesGuard, CountryGuard, decorators
-│       ├── restaurants/        # Resolver + service
-│       ├── orders/             # Resolver + service + subscriptions
-│       ├── payments/           # Resolver + service
-│       └── users/              # me() + teamMembers() queries
-└── frontend/
-    └── src/
-        ├── app/
-        │   ├── page.tsx         # Login page with quick-login grid
-        │   ├── restaurants/     # Restaurant listing + menu + cart
-        │   ├── orders/          # Orders list + real-time toasts
-        │   ├── checkout/        # Cart review + payment
-        │   └── payments/        # Payment method management (Admin)
-        ├── components/
-        │   ├── AccessGate.tsx   # RBAC wrapper component
-        │   └── Navbar.tsx       # Identity switcher
-        └── lib/
-            ├── apollo.ts        # Apollo client + WS subscriptions
-            └── auth-context.tsx # Auth state + switchUser()
-```
-
----
-
-## GraphQL API Reference
-
-**Endpoint:** `http://localhost:3001/graphql`
-
-### Mutations
-```graphql
-mutation Login { login(email: String!, password: String!) }
-mutation CreateOrder { createOrder(restaurantId, items, notes) }
-mutation PlaceOrder { placeOrder(orderId, paymentMethodId) }   # ADMIN, MANAGER
-mutation CancelOrder { cancelOrder(orderId) }                  # ADMIN, MANAGER
-mutation AddPaymentMethod { addPaymentMethod(...) }            # ADMIN only
-mutation RemovePaymentMethod { removePaymentMethod(id) }       # ADMIN only
-mutation SetDefaultPaymentMethod { setDefaultPaymentMethod(id) } # ADMIN only
-```
-
-### Queries
-```graphql
-query { restaurants { ... } }     # Country-scoped automatically
-query { orders { ... } }          # Scoped by role (all/country/own)
-query { myPaymentMethods { ... } }
-query { me { ... } }
-query { teamMembers { ... } }
-```
-
-### Subscriptions
-```graphql
-subscription { orderPlaced { id status country user { name } restaurant { name } } }
-```
-
----
-
-## Wow Factor: Real-time Country-Scoped Notifications
-
-When any order is placed:
-- **Nick Fury (Admin):** Gets notified for all orders globally
-- **Captain Marvel (Manager · India):** Gets toast notifications only for Indian orders
-- **Captain America (Manager · America):** Gets toast notifications only for American orders
-- **Members:** Don't receive notifications (not subscribed)
-
-This demonstrates WebSocket-based real-time communication with ReBAC filtering at the subscription layer.
+*Developed for Slooze. All Rights Reserved.*
